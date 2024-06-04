@@ -1,35 +1,6 @@
 import turtle
 
-class Cities:
-    # Настройка количества городов
-    cities = 10
-    cords = [
-        [-250, 50],
-        [-175, 100],
-        [-175, -75],
-        [-100, 0],
-        [-50, -100],
-        [25, 75],
-        [100, 0],
-        [150, -25],
-        [175, 75],
-        [200, 0]
-    ]
-
-    # Пути для муравьев
-    paths = [
-        [0, 1, 5, 6, 9],
-        [0, 1, 5, 6, 8, 9],
-        [0, 1, 5, 6, 7, 9],
-        [0, 3, 4, 6, 9],
-        [0, 3, 5, 6, 9],
-        [0, 3, 5, 6, 8, 9],
-        [0, 3, 5, 6, 7, 9],
-        [0, 1, 2, 4, 6, 9],
-        [0, 1, 2, 4, 6, 8, 9],
-        [0, 1, 2, 4, 6, 7, 9],
-
-    ]
+from data import Data
 
 
 class Graf:
@@ -41,8 +12,8 @@ class Graf:
 
     @staticmethod
     def draw_graf():
-        cords = Cities.cords
-        cities = Cities.cities
+        cords = Data.cords
+        cities = Data.cities
 
         # Настройка черепашки для рисования
         pen = turtle.Turtle()
@@ -101,8 +72,8 @@ class Ant:
             current_city = self.path[self.path_index]
             next_city = self.path[self.path_index + 1]
 
-            current_position = Cities.cords[current_city]
-            next_position = Cities.cords[next_city]
+            current_position = Data.cords[current_city]
+            next_position = Data.cords[next_city]
 
             dx = next_position[0] - current_position[0]
             dy = next_position[1] - current_position[1]
@@ -129,11 +100,11 @@ def main():
 
     global ants
     ants = []
-    start_position = Cities.cords[0]
+    start_position = Data.cords[0]
 
     # Инициализация муравьев
-    for _ in range(10):
-        ants.append(Ant(start_position, Cities.paths[_]))
+    for _ in range(len(Data.paths)):
+        ants.append(Ant(start_position, Data.paths[_]))
 
     # Начало обновления муравьев
     update_ants()
