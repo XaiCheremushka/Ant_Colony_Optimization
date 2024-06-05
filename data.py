@@ -1,6 +1,8 @@
 class Data:
+    p = 0.2  # коэффициент испарения
+
     # Настройка количества и координат городов
-    cities = 10
+    citiesCount = 10
     cords = [
         [-250, 50],
         [-175, 100],
@@ -66,21 +68,8 @@ class Data:
     }
 
     @staticmethod
-    def regenerate_pheromones(way: str, pheromones: int):
+    def regenerate_pheromones(ways: dict):
         """Устанавливает новое кол-во феромонов"""
-        Data.amount_of_pheromones[way] = pheromones
-
-    # Пути для муравьев
-    paths = [
-        [0, 1, 5, 6, 9],
-        [0, 1, 5, 6, 8, 9],
-        [0, 1, 5, 6, 7, 9],
-        [0, 3, 4, 6, 9],
-        [0, 3, 5, 6, 9],
-        [0, 3, 5, 6, 8, 9],
-        [0, 3, 5, 6, 7, 9],
-        [0, 1, 2, 4, 6, 9],
-        [0, 1, 2, 4, 6, 8, 9],
-        [0, 1, 2, 4, 6, 7, 9]
-    ]
+        for key in ways.keys():
+            Data.amount_of_pheromones[key] = ((1 - Data.p) * Data.amount_of_pheromones[key]) + ways[key]
 

@@ -1,7 +1,6 @@
+import asyncio
 import turtle
-
 from data import Data
-
 
 class Graf:
     # Настройка экрана
@@ -13,7 +12,7 @@ class Graf:
     @staticmethod
     def draw_graf():
         cords = Data.cords
-        cities = Data.cities
+        cities = Data.citiesCount
 
         # Настройка черепашки для рисования
         pen = turtle.Turtle()
@@ -53,7 +52,6 @@ class Graf:
         draw_line(cords[7], cords[9])
         draw_line(cords[8], cords[9])
 
-
 class Ant:
     def __init__(self, start_position, path):
         self.position = start_position
@@ -63,7 +61,7 @@ class Ant:
         self.pen.shape("turtle")
         self.pen.color("blue")
         self.pen.penup()
-        self.pen.goto(self.position)
+        self.pen.goto(start_position)
         self.pen.pendown()
         self.speed = 5  # Скорость муравья
 
@@ -88,28 +86,30 @@ class Ant:
             if abs(self.pen.xcor() - next_position[0]) < self.speed and abs(self.pen.ycor() - next_position[1]) < self.speed:
                 self.path_index += 1
 
+    def has_finished(self):
+        return self.path_index >= len(self.path) - 1
 
-def update_ants():
+def update_ants(ants):
+    all_finished = True
     for ant in ants:
         ant.move()
-    turtle.ontimer(update_ants, 50)  # обновление каждые 50 миллисекунд
+        if not ant.has_finished():
+            all_finished = False
 
+    if not all_finished:
+        turtle.ontimer(lambda: update_ants(ants), 50)  # обновление каждые 50 миллисекунд
 
-def main():
+def create_graf():
     Graf.draw_graf()
 
-    global ants
+async def run_animation(paths):
     ants = []
     start_position = Data.cords[0]
 
     # Инициализация муравьев
-    for _ in range(len(Data.paths)):
-        ants.append(Ant(start_position, Data.paths[_]))
+    for path in paths:
+        ants.append(Ant(start_position, path))
 
-    # Начало обновления муравьев
-    update_ants()
-
-
-if __name__ == "__main__":
-    main()
-    turtle.done()
+    while not all(ant.has_finished() for ant in ants):
+        update_ants(ants)
+        await asyncio.sleep(0.05)  # ждём немного перед следующим обновлением
