@@ -2,10 +2,6 @@ import random
 
 from data import Data
 
-ALPHA = 3.0  # коэффициент влияния феромонов
-BETA = 2.0  # коэффициент видимости
-Q = 7  # константа
-
 class Ant:
     def __init__(self):
         self.tabu = [1]  # пройденные города (индексирование с 1)
@@ -26,7 +22,7 @@ class Ant:
                     # print(f'{city}-{j} - такого пути нет')
                     t = Data.amount_of_pheromones[f'{j}-{city}']  # (Тау) количество феромонов на этом пути
                     n = 1 / Data.distances[f'{j}-{city}']
-                proizv[str(j)] = t**ALPHA * n**BETA
+                proizv[str(j)] = (t**Data.ALPHA) * (n**Data.BETA)
         if not proizv:
             raise ValueError(f"No available cities to move to from city {city}. Tabu: {self.tabu}")
         for j in proizv.keys():
@@ -57,7 +53,7 @@ class Ant:
                 L += Data.distances[f'{self.tabu[i]}-{self.tabu[i-1]}']
                 self.tabuEdges.append(f'{self.tabu[i]}-{self.tabu[i-1]}')
 
-        self.Tij = Q / L
+        self.Tij = Data.Q / L
 
     def start(self):
         """Запуск итерации муравья"""

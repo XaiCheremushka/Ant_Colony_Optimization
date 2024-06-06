@@ -1,5 +1,4 @@
 import asyncio
-import time
 import turtle
 from data import Data
 
@@ -104,7 +103,7 @@ async def update_ants(ants):
 
     if all_finished:
         for ant in ants:
-            ant.pen.clear()  # Удаляем черепаху после достижения конечной точки
+            ant.pen.clear()  # Удаляем путь черепахи после достижения конечной точки
         return True
     else:
         return False
@@ -125,6 +124,7 @@ async def run(paths):
 async def run_animation(pathsIter):
     graf = Graf()
     graf.draw_graf()
+    await asyncio.sleep(2)
 
     for paths in pathsIter:
         await run(paths)

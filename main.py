@@ -1,16 +1,14 @@
 import asyncio
-import time
-import turtle
 
 from data import Data
 from ant import Ant
 from interface import run_animation
 
+
 async def main():
-    iteration = 5
     pathsIter = []
 
-    for _ in range(iteration):
+    for _ in range(Data.iteration):
         print(Data.amount_of_pheromones)
         sum_local_pheromones = {
             '1-2': 0,
@@ -32,7 +30,7 @@ async def main():
         pathsAnts = []
 
         # Инициализация муравьев для каждой итерации
-        ants = [Ant() for i in range(Data.citiesCount)]
+        ants = [Ant() for i in range(Data.ants_number)]
 
         for ant in ants:
             try:
@@ -53,5 +51,4 @@ async def main():
 
 
 if __name__ == '__main__':
-    # main()
     asyncio.run(main())
