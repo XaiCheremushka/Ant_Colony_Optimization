@@ -1,16 +1,17 @@
 import asyncio
+import time
 import turtle
 
 from data import Data
 from ant import Ant
-from interface import create_graf, run_animation
+from interface import run_animation
 
 async def main():
-    create_graf()  # Рисуем граф
-
-    iteration = 3
+    iteration = 5
+    pathsIter = []
 
     for _ in range(iteration):
+        print(Data.amount_of_pheromones)
         sum_local_pheromones = {
             '1-2': 0,
             '1-4': 0,
@@ -27,7 +28,8 @@ async def main():
             '8-10': 0,
             '9-10': 0
         }
-        paths = []
+
+        pathsAnts = []
 
         # Инициализация муравьев для каждой итерации
         ants = [Ant() for i in range(Data.citiesCount)]
@@ -35,7 +37,7 @@ async def main():
         for ant in ants:
             try:
                 ant.start()  # запускаем подсчет данных
-                paths.append(ant.tabu)  # добавляем пройденный путь муравья
+                pathsAnts.append(ant.tabu)  # добавляем пройденный путь муравья
                 # добавляем локальные феромоны в словарь
                 for edge in ant.tabuEdges:
                     if edge in sum_local_pheromones.keys():
@@ -43,12 +45,13 @@ async def main():
             except ValueError as e:
                 print(e)
 
-        Data.regenerate_pheromones(sum_local_pheromones)  # Обновляем феромоны на ребрах
-        print(paths)
-        await run_animation(paths)
+        pathsIter.append(pathsAnts)
 
-    # Чтобы окно turtle не закрывалось сразу
-    turtle.mainloop()
+        Data.regenerate_pheromones(sum_local_pheromones)  # Обновляем феромоны на ребрах
+
+    await run_animation(pathsIter)  # Запускаем анимацию без использования await
+
 
 if __name__ == '__main__':
+    # main()
     asyncio.run(main())

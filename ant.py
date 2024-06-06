@@ -2,9 +2,9 @@ import random
 
 from data import Data
 
-ALPHA = 1.0  # коэффициент влияния феромонов
-BETA = 5.0  # коэффициент видимости
-Q = 5.0  # константа
+ALPHA = 3.0  # коэффициент влияния феромонов
+BETA = 2.0  # коэффициент видимости
+Q = 7  # константа
 
 class Ant:
     def __init__(self):
@@ -16,14 +16,14 @@ class Ant:
         """Нахождение вероятности"""
         proizv = {}  # Произведения видимости и кол-ва феромонов доступных вершин
         ver = {}  # Итоговые вероятности выбора вершины
-        print(f"Текущий город: {city}, Доступные пути: {Data.ways[city]}")
+        # print(f"Текущий город: {city}, Доступные пути: {Data.ways[city]}")
         for j in Data.ways[city]:
             if j not in self.tabu:  # Проверяем есть ли выбранный город в пройденных
                 try:
                     t = Data.amount_of_pheromones[f'{city}-{j}']  # (Тау) количество феромонов на этом пути
                     n = 1 / Data.distances[f'{city}-{j}']
                 except KeyError:
-                    print(f'{city}-{j} - такого пути нет')
+                    # print(f'{city}-{j} - такого пути нет')
                     t = Data.amount_of_pheromones[f'{j}-{city}']  # (Тау) количество феромонов на этом пути
                     n = 1 / Data.distances[f'{j}-{city}']
                 proizv[str(j)] = t**ALPHA * n**BETA
@@ -31,8 +31,8 @@ class Ant:
             raise ValueError(f"No available cities to move to from city {city}. Tabu: {self.tabu}")
         for j in proizv.keys():
             ver[j] = proizv[j] / sum(proizv.values())
-        print(f"Произведения: {proizv}")
-        print(f"Вероятности: {ver}")
+        # print(f"Произведения: {proizv}")
+        # print(f"Вероятности: {ver}")
 
         # Производим выбор города по вероятностям
         r = random.random()  # Рандомное число от 0 до 1
@@ -40,7 +40,7 @@ class Ant:
         for key in ver.keys():
             otrezok += ver[key]
             if r < otrezok:  # если число r попало в отрезок из вероятностей, то возвращаем город, в который пойдет мур.
-                print(f'Выбранный город: {key}')
+                # print(f'Выбранный город: {key}')
                 return key
         # Если не удалось выбрать город, что не должно происходить
         raise RuntimeError("Не удалось выбрать следующий город")
@@ -66,6 +66,6 @@ class Ant:
             city2 = self.find_probability(city1)
             self.tabu.append(int(city2))
             city1 = city2
-            print('-')
-        print('-----------------------------------')
+            # print('-')
+        # print('-----------------------------------')
         self.local_update()
